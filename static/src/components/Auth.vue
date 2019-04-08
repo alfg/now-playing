@@ -1,6 +1,7 @@
 <template>
   <div class="auth">
-    <a class="button" :href="authorizeUrl">Login with Spotify</a>
+    <a
+      class="button" :href="authorizeUrl">Login with Spotify</a>
   </div>
 </template>
 
@@ -17,7 +18,7 @@ export default {
       const params = {
         'client_id': process.env.VUE_APP_SPOTIFY_CLIENT_ID,
         'response_type': 'code',
-        'redirect_uri': 'http://localhost:8080/callback',
+        'redirect_uri': 'http://localhost:8080/api/callback',
         'scope': 'user-read-currently-playing user-read-private user-read-email',
         'state': '12345',
       }

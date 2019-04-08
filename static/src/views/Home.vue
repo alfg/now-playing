@@ -9,7 +9,14 @@
     </div>
 
     <!-- Auth Buttons -->
-    <Auth />
+    <div v-if="!access_token">
+      <Auth />
+    </div>
+
+    <!-- Song Info -->
+    <div v-if="isPlaying">
+      Song: {{ data.name }}
+    </div>
 
     <!-- Footer -->
     <div class="footer">
@@ -31,13 +38,19 @@ export default {
   },
   data() {
     return {
+      access_token: null,
       code: null,
+      isPlaying: false,
+      data: {},
     }
   },
   mounted() {
     this.code = this.$route.query.code;
+    this.access_token = this.$route.query.access_token;
 
-    this.getAuthToken();
+    // this.getAuthToken();
+
+    this.setUpdateTimer();
   },
   methods: {
     getAuthToken() {
@@ -50,6 +63,35 @@ export default {
         })
         .then((json) => {
           console.log(json);
+      });
+    },
+
+    setUpdateTimer() {
+      this.getNowPlaying();
+      setInterval(() => {
+        console.log('updating');
+        if (this.access_token) {
+          this.getNowPlaying();
+        }
+      }, 5000);
+    },
+
+    getNowPlaying() {
+      console.log(this.access_token);
+      const url = `/api/now-playing`;
+      const options = {
+        headers: {
+          'Authorization': `Bearer ${this.access_token}`,
+        }
+      }
+      fetch(url, options)
+        .then((response) => {
+            return response.json();
+        })
+        .then((json) => {
+          console.log(json);
+          this.isPlaying = json.is_playing;
+          this.data = json;
       });
     },
   },
