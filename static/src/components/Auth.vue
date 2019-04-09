@@ -1,12 +1,18 @@
 <template>
   <div class="auth">
-    <a
-      class="button" :href="authorizeUrl">Login with Spotify</a>
+    <a class="button" :href="authorizeUrl">Login with Spotify</a>
   </div>
 </template>
 
 <script>
 import querystring from 'querystring';
+import config from '@/config';
+
+const {
+  SPOTIFY_CLIENT_ID,
+  SPOTIFY_REDIRECT_URI,
+  SPOTIFY_SCOPE,
+} = config;
 
 export default {
   name: 'Auth',
@@ -16,27 +22,17 @@ export default {
     authorizeUrl() {
       const endpoint = 'https://accounts.spotify.com/authorize';
       const params = {
-        'client_id': process.env.VUE_APP_SPOTIFY_CLIENT_ID,
-        'response_type': 'code',
-        'redirect_uri': 'http://localhost:8080/api/callback',
-        'scope': 'user-read-currently-playing user-read-private user-read-email',
-        'state': '12345',
-      }
+        client_id: SPOTIFY_CLIENT_ID,
+        redirect_uri: SPOTIFY_REDIRECT_URI,
+        scope: SPOTIFY_SCOPE,
+        response_type: 'code',
+        state: '12345',
+      };
+
       const url = `${endpoint}?${querystring.stringify(params)}`;
       return url;
-    }
+    },
   },
-  mounted() {
-    // const url = `/api`;
-
-    // fetch(url)
-    //   .then((response) => {
-    //       return response.json();
-    //   })
-    //   .then((json) => {
-    //     console.log(json);
-    //   });
-  }
 };
 </script>
 

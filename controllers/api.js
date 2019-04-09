@@ -1,6 +1,13 @@
 const querystring = require('querystring');
 const axios = require('axios');
 const router = require('express').Router();
+const config = require('../config');
+
+const {
+  SPOTIFY_CLIENT_ID,
+  SPOTIFY_SECRET,
+  SPOTIFY_REDIRECT_URI,
+} = config;
 
 router.get('/', (req, res) => {
   return res.json({ test: 'test' });
@@ -21,21 +28,19 @@ function getToken(req, res) {
   const code = req.query.code || null;
   const url = 'https://accounts.spotify.com/api/token';
   const data = {
-    'grant_type': 'authorization_code',
-    'code': code,
-    'redirect_uri': 'http://localhost:8080/api/callback',
+    grant_type: 'authorization_code',
+    code: code,
+    redirect_uri: SPOTIFY_REDIRECT_URI,
   }
-  const auth = Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_SECRET}`).toString('base64');
+  const auth = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_SECRET}`).toString('base64');
   const options = {
     headers: {
       'Authorization': `Basic ${auth}`,
     }
   }
 
-
   axios.post(url, querystring.stringify(data), options)
     .then((response) => {
-      console.log(response.data);
       const { access_token, refresh_token, expires_in } = response.data;
       return res.redirect('/?' + querystring.stringify({
         access_token,
@@ -44,8 +49,7 @@ function getToken(req, res) {
       }));
     })
     .catch((err) => {
-      console.log('error!');
-       res.json(err);
+      console.log(err);
     });
 };
 
@@ -67,8 +71,7 @@ router.get('/now-playing', (req, res) => {
       return res.json(resp);
     })
     .catch((err) => {
-      console.log('error!', err);
-       res.json(err);
+      console.log(err);
     });
 });
 

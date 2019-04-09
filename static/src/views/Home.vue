@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import querystring from 'querystring';
 import Auth from '@/components/Auth.vue';
 
 export default {
@@ -42,34 +41,19 @@ export default {
       code: null,
       isPlaying: false,
       data: {},
-    }
+    };
   },
   mounted() {
     this.code = this.$route.query.code;
     this.access_token = this.$route.query.access_token;
 
-    // this.getAuthToken();
-
     this.setUpdateTimer();
   },
   methods: {
-    getAuthToken() {
-      console.log('getAuthToken');
-
-      const url = `/api/get-token?code=${this.code}`;
-      fetch(url)
-        .then((response) => {
-            return response.json();
-        })
-        .then((json) => {
-          console.log(json);
-      });
-    },
-
     setUpdateTimer() {
-      this.getNowPlaying();
+      if (this.access_token) this.getNowPlaying();
+
       setInterval(() => {
-        console.log('updating');
         if (this.access_token) {
           this.getNowPlaying();
         }
@@ -77,25 +61,24 @@ export default {
     },
 
     getNowPlaying() {
-      console.log(this.access_token);
-      const url = `/api/now-playing`;
+      const url = '/api/now-playing';
       const options = {
         headers: {
-          'Authorization': `Bearer ${this.access_token}`,
-        }
-      }
+          Authorization: `Bearer ${this.access_token}`,
+        },
+      };
+
       fetch(url, options)
-        .then((response) => {
-            return response.json();
-        })
+        .then(response => (
+          response.json()
+        ))
         .then((json) => {
-          console.log(json);
           this.isPlaying = json.is_playing;
           this.data = json;
-      });
+        });
     },
   },
-}
+};
 </script>
 
 <style scoped>
