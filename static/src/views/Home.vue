@@ -15,7 +15,8 @@
 
     <!-- Song Info -->
     <div v-if="isPlaying">
-      Song: {{ data.name }}
+      <TrackInfo :data="data" />
+      <!-- Song: {{ data.name }} -->
     </div>
 
     <!-- Footer -->
@@ -29,11 +30,13 @@
 
 <script>
 import Auth from '@/components/Auth.vue';
+import TrackInfo from '@/components/TrackInfo.vue';
 
 export default {
   name: 'home',
   components: {
     Auth,
+    TrackInfo,
   },
   data() {
     return {

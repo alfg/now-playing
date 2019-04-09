@@ -66,7 +66,11 @@ router.get('/now-playing', (req, res) => {
     .then((response) => {
       const resp = {
         is_playing: response.data.is_playing,
-        name: response.data.item.name,
+        song_name: response.data.item.name,
+        artist_name: response.data.item.artists[0].name,
+        album_name: response.data.item.album.name,
+        album_image: response.data.item.album.images
+          .find(o => o.height === 300).url,
       }
       return res.json(resp);
     })
