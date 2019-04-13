@@ -72,6 +72,10 @@ router.get('/now-playing', (req, res) => {
         album_image: response.data.item.album.images
           .find(o => o.height === 300).url,
       }
+
+
+      // Broadcast to WS.
+
       return res.json(resp);
     })
     .catch((err) => {

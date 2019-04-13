@@ -16,7 +16,6 @@
     <!-- Song Info -->
     <div v-if="isPlaying">
       <TrackInfo :data="data" />
-      <!-- Song: {{ data.name }} -->
     </div>
 
     <!-- Footer -->
@@ -85,7 +84,6 @@ export default {
 </script>
 
 <style scoped>
-
 .logo {
   margin: 10px 0;
 }
