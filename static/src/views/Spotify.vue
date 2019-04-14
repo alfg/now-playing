@@ -14,20 +14,40 @@ export default {
   components: {
     TrackInfo,
   },
-  mounted() {
-    if (EventSource) {
-      const eventSource = new EventSource('/api/now-playing/events');
-      eventSource.onmessage = (event) => {
-        const { data } = JSON.parse(event.data);
-        this.data = data.msg;
-      };
-    }
-  },
   data() {
     return {
+      id: null,
       isPlaying: true,
       data: {},
     };
+  },
+  mounted() {
+    this.id = this.$route.params.id;
+    this.setUpdateTimer();
+  },
+  methods: {
+    setUpdateTimer() {
+      if (this.id) this.getNowPlaying();
+
+      setInterval(() => {
+        if (this.id) {
+          this.getNowPlaying();
+        }
+      }, 5000);
+    },
+
+    getNowPlaying() {
+      const url = `/api/now-playing/${this.id}`;
+
+      fetch(url)
+        .then(response => (
+          response.json()
+        ))
+        .then((json) => {
+          this.isPlaying = json.is_playing;
+          this.data = json;
+        });
+    },
   },
 };
 </script>

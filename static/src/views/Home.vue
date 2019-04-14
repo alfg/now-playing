@@ -9,7 +9,7 @@
     </div>
 
     <!-- Auth Buttons -->
-    <div v-if="!access_token">
+    <div v-if="!id">
       <Auth />
     </div>
 
@@ -39,38 +39,31 @@ export default {
   },
   data() {
     return {
-      access_token: null,
-      code: null,
+      id: null,
       isPlaying: false,
       data: {},
     };
   },
   mounted() {
-    this.code = this.$route.query.code;
-    this.access_token = this.$route.query.access_token;
+    this.id = this.$route.query.id;
 
     this.setUpdateTimer();
   },
   methods: {
     setUpdateTimer() {
-      if (this.access_token) this.getNowPlaying();
+      if (this.id) this.getNowPlaying();
 
       setInterval(() => {
-        if (this.access_token) {
+        if (this.id) {
           this.getNowPlaying();
         }
       }, 5000);
     },
 
     getNowPlaying() {
-      const url = '/api/now-playing';
-      const options = {
-        headers: {
-          Authorization: `Bearer ${this.access_token}`,
-        },
-      };
+      const url = `/api/now-playing/${this.id}`;
 
-      fetch(url, options)
+      fetch(url)
         .then(response => (
           response.json()
         ))
