@@ -1,12 +1,15 @@
 <template>
   <div class="track-info">
-    <div class="cover">
-      <img :src="data.album_image" />
-    </div>
-    <div class="song-info">
-      <div class="name">{{ data.song_name }}</div>
-      <div class="artist">{{ data.artist_name }}</div>
-      <div class="album">{{ data.album_name }}</div>
+    <div class="loading" v-if="isLoading">Loading</div>
+    <div class="wrapper" v-else>
+      <div class="cover">
+        <img :src="data.album_image" />
+      </div>
+      <div class="song-info">
+        <div class="name">{{ data.song_name }}</div>
+        <div class="artist">{{ data.artist_name }}</div>
+        <div class="album">{{ data.album_name }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -14,10 +17,11 @@
 <script>
 export default {
   name: 'track-info',
-  components: {
-  },
   props: ['data'],
-  mounted() {
+  computed: {
+    isLoading() {
+      return Object.keys(this.data).length === 0 && this.data.constructor === Object;
+    },
   },
 };
 </script>
@@ -31,6 +35,10 @@ export default {
   background: #191414;
   border: 1px solid #444;
   padding: 10px;
+}
+
+.wrapper {
+  height: 100%;
 }
 
 .cover {
@@ -64,6 +72,12 @@ export default {
 .song-info .album {
   height: 25%;
   color: #ccc;
+}
+
+.loading {
+  font-size: 24px;
+  height: 100%;
+  margin: 0 auto;
 }
 
 /* 1DB954 */

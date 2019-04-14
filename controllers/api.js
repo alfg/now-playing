@@ -2,6 +2,9 @@ const querystring = require('querystring');
 const axios = require('axios');
 const router = require('express').Router();
 const config = require('../config');
+const EventEmitter = require('events');
+
+const Stream = new EventEmitter();
 
 const {
   SPOTIFY_CLIENT_ID,
@@ -73,14 +76,25 @@ router.get('/now-playing', (req, res) => {
           .find(o => o.height === 300).url,
       }
 
-
-      // Broadcast to WS.
-
+      // Send event.
+      Stream.emit('push', 'now-playing', { msg: resp });
       return res.json(resp);
     })
     .catch((err) => {
       console.log(err);
     });
+});
+
+router.get('/now-playing/events', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  });
+
+  Stream.on('push', (event, data) => {
+    res.write('data: ' + JSON.stringify({ data }) + '\n\n');
+  });
 });
 
 module.exports = router;
