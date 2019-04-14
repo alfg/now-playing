@@ -18,6 +18,12 @@
       <TrackInfo :data="data" />
     </div>
 
+    <!-- Copy paste -->
+    <div v-if="isPlaying">
+      <p>Paste this into your OBS Browser</p>
+      <input type="text" :value="`${host}/spotify/${id}`" readonly="readonly" />
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       <ul>
@@ -39,6 +45,7 @@ export default {
   },
   data() {
     return {
+      host: window.location.origin,
       id: null,
       isPlaying: false,
       data: {},
@@ -77,6 +84,11 @@ export default {
 </script>
 
 <style scoped>
+.home {
+  width: 800px;
+  margin: 0 auto;
+}
+
 .logo {
   margin: 10px 0;
 }
@@ -112,5 +124,18 @@ a {
 }
 a:hover {
   text-decoration: underline;
+}
+
+input[type="text"] {
+  width: 60%;
+  height: 38px;
+  padding: 6px 10px;
+  background-color: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 </style>
