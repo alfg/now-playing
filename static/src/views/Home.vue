@@ -5,7 +5,7 @@
     <div class="logo">
       <img alt="Logo" src="../assets/spotify_green.png" width="100">
       <h1>Now Playing</h1>
-      <p>Display your current playing track for your stream!</p>
+      <h4>Display your current playing track for your stream!</h4>
     </div>
 
     <!-- Auth Buttons -->
@@ -20,7 +20,7 @@
 
     <!-- Copy paste -->
     <div v-if="isPlaying">
-      <p>Paste this into your OBS Browser</p>
+      <h4>Paste this URL into OBS as a Browser Source</h4>
       <input type="text" :value="`${host}/spotify/${id}`" readonly="readonly" />
     </div>
 
@@ -85,7 +85,8 @@ export default {
 
 <style scoped>
 .home {
-  width: 800px;
+  width: 80%;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -104,8 +105,9 @@ export default {
   bottom: 5%;
   position: fixed;
   margin-top: 40px;
+  max-width: 800px;
   text-align: center;
-  width: 100%;
+  width: 80%;
 }
 ul {
   margin: 20px 0;

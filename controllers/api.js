@@ -51,7 +51,13 @@ function getToken(req, res) {
       
       // Create redis entry for user.
       const guid = shortid.generate();
-      rClient.set(guid, `${access_token}:${refresh_token}:${expires_in}`, redis.print);
+      const obj = {
+        created: new Date().toISOString(),
+        access_token,
+        refresh_token,
+        expires_in
+      };
+      rClient.set(guid, JSON.stringify(obj), redis.print);
 
       return res.redirect('/?' + querystring.stringify({
         id: guid,
@@ -66,36 +72,86 @@ router.get('/now-playing/:id', (req, res) => {
   const id = req.params.id;
   const url = 'https://api.spotify.com/v1/me/player/currently-playing';
 
-  getAuthToken(id, (accessToken) => {
-    const options = {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      }
-    }
-
-    axios.get(url, options)
-      .then((response) => {
-        const resp = {
-          is_playing: response.data.is_playing,
-          song_name: response.data.item.name,
-          artist_name: response.data.item.artists[0].name,
-          album_name: response.data.item.album.name,
-          album_image: response.data.item.album.images
-            .find(o => o.height === 300).url,
+  rClient.get(id, (err, reply) => {
+    if (!reply) {
+      return res.status(404).json({ message: 'Not found.' });
+    } else {
+      getAuthToken(id, (accessToken) => {
+        const options = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          }
         }
-        return res.json(resp);
-      })
-      .catch((err) => {
-        console.log(err);
+
+        axios.get(url, options)
+          .then((response) => {
+            const resp = {
+              is_playing: response.data.is_playing,
+              song_name: response.data.item.name,
+              artist_name: response.data.item.artists[0].name,
+              album_name: response.data.item.album.name,
+              album_image: response.data.item.album.images
+                .find(o => o.height === 300).url,
+            }
+            res.json(resp);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
+    }
   });
+
 });
 
 function getAuthToken(id, callback) {
   rClient.get(id, (err, reply) => {
-    const accessToken = reply.split(':')[0];
-    return callback(accessToken);
+    const { access_token, refresh_token, expires_in, created } = JSON.parse(reply);
+
+    const now = new Date();
+    const expired = (new Date(created).getTime() + (1000 * expires_in)) < now;
+
+    // Get refresh token and update DB if expired.
+    if (expired) {
+      getNewAuthToken(id, refresh_token, (newAuthToken) => {
+        return callback(newAuthToken);
+      });
+    }
+
+    return callback(access_token);
   });
 }
+
+function getNewAuthToken(id, refreshToken, callback) {
+  const url = 'https://accounts.spotify.com/api/token';
+  const data = {
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken,
+  }
+  const auth = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_SECRET}`).toString('base64');
+  const options = {
+    headers: {
+      'Authorization': `Basic ${auth}`,
+    }
+  }
+
+  axios.post(url, querystring.stringify(data), options)
+    .then((response) => {
+      const { access_token, refresh_token: newRefreshToken, expires_in } = response.data;
+      
+      // Update redis entry for id.
+      const obj = {
+        created: new Date().toISOString(),
+        access_token,
+        refresh_token: newRefreshToken || refreshToken, // If no refresh_token returned, use old one.
+        expires_in,
+      };
+      rClient.set(id, JSON.stringify(obj), redis.print);
+      return callback(access_token);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 module.exports = router;
