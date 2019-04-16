@@ -2,18 +2,23 @@ const querystring = require('querystring');
 const axios = require('axios');
 const router = require('express').Router();
 const config = require('../config');
-const EventEmitter = require('events');
 const redis = require('redis');
 const shortid = require('shortid');
-
+const EventEmitter = require('events');
 const Stream = new EventEmitter();
-const rClient = redis.createClient();
 
 const {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_SECRET,
   SPOTIFY_REDIRECT_URI,
+  REDIS_HOST,
+  REDIS_PORT,
 } = config;
+
+const rClient = redis.createClient({
+  host: REDIS_HOST,
+  port: REDIS_PORT,
+});
 
 router.get('/', (req, res) => {
   return res.json({ test: 'test' });

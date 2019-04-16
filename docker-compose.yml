@@ -1,4 +1,25 @@
-redis:
-  image: "redis:alpine"
-  ports:
-    - "6379:6379"
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    labels:
+      - "traefik.frontend.rule=Host:now-playing.docker.localhost,localhost"
+
+  reverse-proxy:
+    image: traefik
+    command: --api --docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
