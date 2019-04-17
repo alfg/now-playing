@@ -1,25 +1,32 @@
-version: '3'
+web:
+  build: .
+  ports:
+    - "4000:4000"
+  links:
+    - "redis"
+  env_file:
+    - .env
+  labels:
+    - "traefik.frontend.rule=Host:now-playing.streamcat.tv,now-playing.docker.localhost,localhost"
 
-services:
-  web:
-    build: .
-    ports:
-      - "4000:4000"
-    env_file:
-      - .env
-    labels:
-      - "traefik.frontend.rule=Host:now-playing.docker.localhost,localhost"
+reverse-proxy:
+  image: traefik
+  command: --api --docker
+  ports:
+    - "80:80"
+    - "8080:8080"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
 
-  reverse-proxy:
-    image: traefik
-    command: --api --docker
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+redis:
+  image: "redis:alpine"
+  # ports:
+  #   - "6379:6379"
+  volumes:
+    - "/root/redis:/data"
+  entrypoint: ["redis-server", "--appendonly", "yes"]
 
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
+redis-cli:
+  image: "redis:alpine"
+  links:
+    - "redis"
