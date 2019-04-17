@@ -1,0 +1,4 @@
+.travis/
+node_modules/
+static/node_modules/
+.env

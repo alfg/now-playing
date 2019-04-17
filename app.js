@@ -14,7 +14,7 @@ app.use(morgan('combined'));
 
 app.use('/api', api);
 app.use(history());
-app.use(express.static('static/dist'))
+app.use(express.static('static/dist'));
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));
 
