@@ -18,10 +18,9 @@
       <TrackInfo :data="data" />
     </div>
 
-    <!-- Copy paste -->
+    <!-- Settings -->
     <div v-if="isPlaying">
-      <h4>Paste this URL into OBS as a Browser Source</h4>
-      <input type="text" :value="`${host}/spotify/${id}`" readonly="readonly" />
+      <Settings :id="id" />
     </div>
 
     <!-- Footer -->
@@ -34,18 +33,21 @@
 </template>
 
 <script>
+import '@/assets/normalize.css';
+import '@/assets/skeleton.css';
 import Auth from '@/components/Auth.vue';
 import TrackInfo from '@/components/TrackInfo.vue';
+import Settings from '@/components/Settings.vue';
 
 export default {
   name: 'home',
   components: {
     Auth,
+    Settings,
     TrackInfo,
   },
   data() {
     return {
-      host: window.location.origin,
       id: null,
       isPlaying: false,
       data: {},
@@ -53,7 +55,6 @@ export default {
   },
   mounted() {
     this.id = this.$route.query.id;
-
     this.setUpdateTimer();
   },
   methods: {
@@ -88,6 +89,7 @@ export default {
   width: 80%;
   max-width: 800px;
   margin: 0 auto;
+  margin-top: 40px;
 }
 
 .logo {
@@ -96,9 +98,7 @@ export default {
 
 .logo h1 {
   color: #222;
-  font-size: 48px;
   font-family: 'Pacifico', 'cursive';
-  margin: 0;
 }
 
 .footer {
@@ -126,18 +126,5 @@ a {
 }
 a:hover {
   text-decoration: underline;
-}
-
-input[type="text"] {
-  width: 60%;
-  height: 38px;
-  padding: 6px 10px;
-  background-color: #fff;
-  border: 1px solid #d1d1d1;
-  border-radius: 4px;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }
 </style>
