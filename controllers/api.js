@@ -91,12 +91,12 @@ router.get('/now-playing/:id', (req, res) => {
         axios.get(url, options)
           .then((response) => {
             const resp = {
-              is_playing: response.data.is_playing,
-              song_name: response.data.item.name,
-              artist_name: response.data.item.artists[0].name,
-              album_name: response.data.item.album.name,
+              is_playing: response.data.is_playing || false,
+              song_name: response.data.item.name || '',
+              artist_name: response.data.item.artists[0].name || '',
+              album_name: response.data.item.album.name || '',
               album_image: response.data.item.album.images
-                .find(o => o.height === 300).url,
+                .find(o => o.height === 300).url || '',
             }
             res.json(resp);
           })

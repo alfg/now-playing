@@ -5,7 +5,8 @@
     <div class="logo">
       <img alt="Logo" src="../assets/spotify_green.png" width="100">
       <h1>Now Playing</h1>
-      <h4>Display your current playing track for your stream!</h4>
+      <h5>Display your current playing track for your stream!</h5>
+      <hr />
     </div>
 
     <!-- Auth Buttons -->
@@ -13,14 +14,9 @@
       <Auth />
     </div>
 
-    <!-- Song Info -->
-    <div v-if="isPlaying">
-      <TrackInfo :data="data" />
-    </div>
-
     <!-- Settings -->
-    <div v-if="isPlaying">
-      <Settings :id="id" />
+    <div v-if="id">
+      <Settings :id="id" :data="data" />
     </div>
 
     <!-- Footer -->
@@ -36,7 +32,6 @@
 import '@/assets/normalize.css';
 import '@/assets/skeleton.css';
 import Auth from '@/components/Auth.vue';
-import TrackInfo from '@/components/TrackInfo.vue';
 import Settings from '@/components/Settings.vue';
 
 export default {
@@ -44,7 +39,6 @@ export default {
   components: {
     Auth,
     Settings,
-    TrackInfo,
   },
   data() {
     return {

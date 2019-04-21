@@ -4,19 +4,19 @@
     <div class="row">
       <div class="six columns">
         <label for="theme">Theme</label>
-        <select class="u-full-width" id="theme">
-          <option value="full">Full</option>
-          <option value="minimal">Minimal</option>
+        <select class="u-full-width" id="theme" v-model="theme">
+          <option value="f">Full</option>
+          <option value="m">Minimal</option>
         </select>
       </div>
 
       <div class="six columns">
         <label for="theme">Position</label>
-        <select class="u-full-width" id="theme">
-          <option value="bottom-right">bottom-right</option>
-          <option value="bottom-left">bottom-left</option>
-          <option value="top-right">top-right</option>
-          <option value="top-left">top-left</option>
+        <select class="u-full-width" id="position" v-model="position">
+          <option value="br">bottom-right</option>
+          <option value="bl">bottom-left</option>
+          <option value="tr">top-right</option>
+          <option value="tl">top-left</option>
         </select>
       </div>
     </div>
@@ -25,31 +25,46 @@
       class="u-full-width"
       id="url"
       type="text"
-      :value="`${host}/spotify/${id}`"
+      :value="url"
       readonly="readonly" />
+
+    <hr />
+    <h4>Preview</h4>
+
+    <div v-if="isPlaying">
+      <TrackInfo :data="data" :theme="theme" />
+    </div>
+    <div v-else>
+      <h6>Start playing music to see preview!</h6>
+    </div>
   </div>
+
 </template>
 
 <script>
+import querystring from 'querystring';
+import TrackInfo from '@/components/TrackInfo.vue';
+
 export default {
   name: 'settings',
-  props: ['id'],
+  components: {
+    TrackInfo,
+  },
+  props: ['id', 'data'],
   data() {
     return {
       host: window.location.origin,
+      theme: this.$route.query.t || 'f',
+      position: this.$route.query.p || 'br',
     };
   },
-  methods: {
-    getSettings() {
-      const url = `/api/now-playing/${this.id}/settings`;
-
-      fetch(url)
-        .then(response => (
-          response.json()
-        ))
-        .then((json) => {
-          console.log(json);
-        });
+  computed: {
+    url() {
+      const params = querystring.stringify({ t: this.theme, p: this.position });
+      return `${this.host}/spotify/${this.id}?${params}`;
+    },
+    isPlaying() {
+      return this.data.is_playing;
     },
   },
 };
