@@ -42,24 +42,10 @@ export default {
 }
 
 .button {
-  display: inline-block;
-  font-size: 14px;
-  font-family: Circular,Helvetica,Arial,sans-serif;
-  line-height: 1;
-  border-radius: 500px;
-  padding: 18px 48px 16px;
-  transition-property: background-color,border-color,color,box-shadow,filter;
-  transition-duration: .3s;
-  border-width: 0;
-  letter-spacing: 2px;
-  min-width: 160px;
-  text-transform: uppercase;
-  white-space: normal;
-  font-weight: 700;
-
   color: #fff;
   background-color: #1db954;
   border-color: #1aa34a;
-  text-decoration: none;
+  border-radius: 500px;
+  font-size: 14px;
 }
 </style>

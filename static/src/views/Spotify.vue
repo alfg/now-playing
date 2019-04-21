@@ -1,7 +1,7 @@
 <template>
   <div class="spotify">
-    <div class="widget" v-if="isPlaying">
-      <TrackInfo :data="data" />
+    <div class="widget" v-bind:class="position" v-if="isPlaying">
+      <TrackInfo :data="data" :theme="theme" />
     </div>
   </div>
 </template>
@@ -18,6 +18,8 @@ export default {
     return {
       id: null,
       isPlaying: true,
+      theme: this.$route.query.t || 'f',
+      position: this.$route.query.p || 'br',
       data: {},
     };
   },
@@ -56,7 +58,25 @@ export default {
 <style scoped>
 .widget {
   position: fixed;
+}
+
+.widget.br {
   bottom: 1%;
   right: 1%;
+}
+
+.widget.bl {
+  bottom: 1%;
+  left: 1%;
+}
+
+.widget.tr {
+  top: 1%;
+  right: 1%;
+}
+
+.widget.tl {
+  top: 1%;
+  left: 1%;
 }
 </style>
