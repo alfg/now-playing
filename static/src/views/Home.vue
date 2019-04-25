@@ -3,7 +3,7 @@
 
     <!-- Header -->
     <div class="logo">
-      <img alt="Logo" src="../assets/spotify_green.png" width="100">
+      <img alt="Logo" src="../assets/logo.png" width="100">
       <h1>Now Playing</h1>
       <h5>Display your current playing track for your stream!</h5>
       <hr />

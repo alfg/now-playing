@@ -1,6 +1,8 @@
 <template>
   <div class="auth">
-    <a class="button" :href="authorizeUrl">Login with Spotify</a>
+    <a class="button" :href="authorizeUrl">
+      <img alt="Logo" src="../assets/spotify_white.png" />
+      Login with Spotify</a>
   </div>
 </template>
 
@@ -47,5 +49,11 @@ export default {
   border-color: #1aa34a;
   border-radius: 500px;
   font-size: 14px;
+}
+
+.button img {
+  height: 25px;
+  width: 25px;
+  vertical-align: middle;
 }
 </style>

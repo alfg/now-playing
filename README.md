@@ -1,5 +1,5 @@
 # Now Playing
-![Now Playing](/static/public/img/icons/spotify_green.png)
+![Now Playing](/static/public/img/logo.png)
 
 > Display your current playing track for your stream!
 
