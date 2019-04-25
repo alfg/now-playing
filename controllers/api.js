@@ -73,7 +73,7 @@ function getToken(req, res) {
     });
 };
 
-router.get('/now-playing/:id', (req, res) => {
+router.get('/playing/:id', (req, res) => {
   const id = req.params.id;
   const url = 'https://api.spotify.com/v1/me/player/currently-playing';
 

@@ -60,8 +60,12 @@ export default {
   },
   computed: {
     url() {
-      const params = querystring.stringify({ t: this.theme, p: this.position });
-      return `${this.host}/spotify/${this.id}?${params}`;
+      // Only build query params if theme and position are not defaults.
+      if (this.theme !== 'f' || this.position !== 'br') {
+        const params = querystring.stringify({ t: this.theme, p: this.position });
+        return `${this.host}/playing/${this.id}?${params}`;
+      }
+      return `${this.host}/playing/${this.id}`;
     },
     isPlaying() {
       return this.data.is_playing;

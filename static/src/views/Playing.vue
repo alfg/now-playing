@@ -1,5 +1,5 @@
 <template>
-  <div class="spotify">
+  <div class="playing">
     <div class="widget" v-bind:class="position" v-if="isPlaying">
       <TrackInfo :data="data" :theme="theme" />
     </div>
@@ -10,7 +10,7 @@
 import TrackInfo from '@/components/TrackInfo.vue';
 
 export default {
-  name: 'spotify',
+  name: 'playing',
   components: {
     TrackInfo,
   },
@@ -39,7 +39,7 @@ export default {
     },
 
     getNowPlaying() {
-      const url = `/api/now-playing/${this.id}`;
+      const url = `/api/playing/${this.id}`;
 
       fetch(url)
         .then(response => (

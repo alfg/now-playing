@@ -63,7 +63,7 @@ export default {
     },
 
     getNowPlaying() {
-      const url = `/api/now-playing/${this.id}`;
+      const url = `/api/playing/${this.id}`;
 
       fetch(url)
         .then(response => (
