@@ -8,7 +8,7 @@ https://now-playing.streamcat.tv
 ## Develop
 Now Playing is developed with NodeJS/Express for the backend & Vue.js for the frontend client.
 
-PogMeter requires the following for development:
+Requires the following for development:
 * NodeJS 6+
 * Redis
 
